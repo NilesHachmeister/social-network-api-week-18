@@ -2,6 +2,8 @@ const express = require('express');
 const db = require('./config/connection');
 const routes = require('./routes');
 
+// figure out gettir methed it thoughts model
+
 
 
 const PORT = 3001;
