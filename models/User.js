@@ -44,7 +44,7 @@ const userSchema = new Schema(
 
 // creating a virtual atribute that counts the number of friends the user has
 userSchema.virtual('friendConut').get(function () {
-    return this.friends.length();
+    return this.friends.length;
 })
 
 // initializing the user model

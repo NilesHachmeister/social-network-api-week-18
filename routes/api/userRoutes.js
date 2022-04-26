@@ -10,9 +10,10 @@ const {
 
 // current route is /api/users
 
-router.route('/').get(getAllUsers)
-// .post(postNewUser);
+router.route('/').get(getAllUsers).post(postNewUser);
 
-// router.route('/:userId').get(getSingleUser).put(updateUser).delete(deleteUser);
+router.route('/:userId').get(getSingleUser).put(updateUser).delete(deleteUser);
+
+
 
 module.exports = router;
