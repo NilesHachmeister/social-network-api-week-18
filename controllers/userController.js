@@ -2,12 +2,10 @@ const { Reaction, User, Thought } = require('../models');
 
 module.exports = {
     getAllUsers(req, res) {
-        console.log("here");
         User.find({})
             .then((allUsers) => res.json(allUsers))
             .catch((err) =>
-                console.log(err))
-        // res.status(500).json(err));
+                res.status(500).json(err));
     },
     getSingleUser(req, res) {
         User.findOne({ _id: req.params.userId })
@@ -50,7 +48,38 @@ module.exports = {
             },
             )
     },
+
+    addNewFriend(req, res) {
+        console.log("here");
+        User.findOneAndUpdate(
+            { _id: req.params.userId },
+            { $addToSet: { friends: req.params.friendId } },
+            { runValidators: true, new: true }
+        )
+            .then((user) =>
+                !user
+                    ? res
+                        .status(404)
+                        .json({ message: 'No user with that id, please try again' })
+                    : res.json(user)
+            )
+            .catch((err) => res.status(500).json(err));
+
+    },
+
+    removeFriend(req, res) {
+        User.findOneAndUpdate(
+            { _id: req.params.userId },
+            { $pull: { friends: req.params.friendId } },
+            { runValidators: true, new: true }
+        )
+            .then((friend) =>
+                !friend
+                    ? res
+                        .status(404)
+                        .json({ message: 'No user with that id, please try again' })
+                    : res.json(friend)
+            )
+            .catch((err) => res.status(500).json(err));
+    },
 };
-
-
-
