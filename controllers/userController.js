@@ -1,4 +1,4 @@
-const { Reaction, User, Thought } = require('../models');
+const { User } = require('../models');
 
 module.exports = {
     getAllUsers(req, res) {
@@ -50,7 +50,6 @@ module.exports = {
     },
 
     addNewFriend(req, res) {
-        console.log("here");
         User.findOneAndUpdate(
             { _id: req.params.userId },
             { $addToSet: { friends: req.params.friendId } },
