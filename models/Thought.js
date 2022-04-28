@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 const reactionSchema = require('./Reaction.js');
-const moment = require('moment')
+const formatTime = require('./../utils/helper')
 
 // creating the thought model
 const thoughtSchema = new Schema(
@@ -13,7 +13,9 @@ const thoughtSchema = new Schema(
         },
         createdAt: {
             type: Date,
-            default: moment().format('dddd'),
+            default: Date.now,
+            get: formatTime
+
         },
         username: {
             type: String,
@@ -34,15 +36,12 @@ thoughtSchema.virtual('reactionCount').get(function () {
     return this.reactions.length;
 })
 
-thoughtSchema
-    .virtual('createdAt')
-    // Getter
-    .get(function () {
-        return `createdAt: ${this.createdAt}`;
-    });
-
 // initializing the thought model
 const Thought = model('Thought', thoughtSchema);
+
+// alowing the getter to work as intended
+thoughtSchema.set('toObject', { getters: true })
+thoughtSchema.set('toJSON', { getters: true })
 
 // exporting the thought model
 module.exports = Thought;

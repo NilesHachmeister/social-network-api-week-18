@@ -1,9 +1,10 @@
 const { Schema, Types } = require('mongoose');
+const formatTime = require('./../utils/helper')
 
 // creating the reaction subdocument
 const reactionSchema = new Schema(
     {
-        reationId: {
+        reactionId: {
             type: Schema.Types.ObjectId,
             default: () => new Types.ObjectId(),
         },
@@ -19,7 +20,7 @@ const reactionSchema = new Schema(
         createdAt: {
             type: Date,
             default: Date.now,
-            // getter method?
+            get: formatTime
         },
     },
     {
@@ -29,6 +30,10 @@ const reactionSchema = new Schema(
         id: false,
     }
 );
+
+// alowing the getter to work as intended
+reactionSchema.set('toObject', { getters: true })
+reactionSchema.set('toJSON', { getters: true })
 
 // exporting the reaction schema to be used as a subcomucment in thoughts
 module.exports = reactionSchema;

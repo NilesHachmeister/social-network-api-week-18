@@ -8,14 +8,14 @@ module.exports = {
         Thought.find({})
             .then((allThoughts) => res.json(allThoughts))
             .catch((err) =>
-                console.log(err)
-                // res.status(500).json(err)
+                res.status(500).json(err)
             );
     },
 
     // this gets a single thought and returns it to the user
     getSingleThought(req, res) {
         Thought.findOne({ _id: req.params.thoughtId })
+            .populate('reactions')
             .then((thought) => !thought
                 ? res.status(404).json({ message: 'There was no thought with that id, please try again.' })
                 : res.json(thought)
@@ -60,6 +60,16 @@ module.exports = {
             .then((thought) =>
                 !thought
                     ? res.status(404).json({ message: 'There was no thought with that id, please try again.' })
+                    : User.findOneAndUpdate(
+                        { thoughts: req.params.thoughtId },
+                        { $pull: { thoughts: req.params.thoughtId } },
+                        { new: true }
+                    )
+            ).then((thought) =>
+                !thought
+                    ? res
+                        .status(404)
+                        .json({ message: 'There was no thought with that id, please try again.' })
                     : res.json(thought)
             )
             .catch((err) => {
@@ -89,8 +99,8 @@ module.exports = {
     removeReaction(req, res) {
         Thought.findOneAndUpdate(
             { _id: req.params.thoughtId },
-            { $pull: { reactions: { reactionId: req.body.reactionId } } },
-            { runValidators: true, new: true }
+            { $pull: { reactions: { _id: req.body.reactionId } } },
+            { new: true }
         )
             .then((thought) =>
                 !thought
@@ -101,4 +111,6 @@ module.exports = {
             )
             .catch((err) => res.status(500).json(err));
     },
+
+
 };

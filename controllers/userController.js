@@ -14,6 +14,7 @@ module.exports = {
     // this gets a single user by the id and returns it as json
     getSingleUser(req, res) {
         User.findOne({ _id: req.params.userId })
+            .populate('thoughts')
             .then((user) => !user
                 ? res.status(404).json({ message: 'There was no user with that id, please try again.' })
                 : res.json(user)
